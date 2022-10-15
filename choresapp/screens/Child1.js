@@ -1,15 +1,10 @@
 import React from 'react';
-import {View, Text, StyleSheet, Button} from 'react-native';
+import {View, Text, StyleSheet} from 'react-native';
 
-const Child1 = ({ navigation })=>{
+const Child1 = (props)=>{
     return (
         <View style={styles.screen}>
             <Text style={styles.title}>Lapsen näkymä 1</Text>
-
-            <Button
-            title='Check tasks'
-            onPress={() => navigation.navigate('Child2')}/>
-
         </View>
     );
 }
