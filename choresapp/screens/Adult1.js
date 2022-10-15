@@ -1,18 +1,10 @@
 import React from 'react';
-import {View, Text, StyleSheet, Button} from 'react-native';
+import {View, Text, StyleSheet} from 'react-native';
 
-const Adult1 = ({ navigation })=>{
+const Adult1 = (props)=>{
     return (
         <View style={styles.screen}>
             <Text style={styles.title}>Aikuisen näkymä 1</Text>
-
-            <Button 
-            title='Back'
-            onPress={() => navigation.goBack()}/>
-
-            <Button
-            title='Add task'
-            onPress={() => navigation.navigate('Adult2')}/>
         </View>
     );
 }
