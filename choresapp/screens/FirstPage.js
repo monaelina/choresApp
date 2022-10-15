@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import { openDatabase } from 'react-native-sqlite-storage';
 import {
   SafeAreaView,
@@ -19,6 +19,24 @@ import Header from '../components/Header';
 //const Stack = createNativeStackNavigator();
 const ImageText=(props)=><Text style={styles.imageTextStyle}></Text>
 const FirstPage = ({ navigation })=> {
+  useEffect(() => {
+    db.transaction(function (txn) {
+      txn.executeSql(
+        "SELECT name FROM sqlite_master WHERE type='table' AND name='table_tasks'",
+        [],
+        function (tx, res) {
+          console.log('item:', res.rows.length);
+          if (res.rows.length == 0) {
+            txn.executeSql('DROP TABLE IF EXISTS table_tasks', []);
+            txn.executeSql(
+              'CREATE TABLE IF NOT EXISTS table_tasks(task_id INTEGER PRIMARY KEY AUTOINCREMENT, task_name VARCHAR(20), task_price INT(10), task_value INT(1))',
+              []
+            );
+          }
+        }
+      );
+    });
+  }, []);
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <View style={StyleSheet.container}>
