@@ -2,6 +2,8 @@ import React from 'react';
 import {View, Text, StyleSheet} from 'react-native';
 import { openDatabase } from 'react-native-sqlite-storage';
 
+var db = openDatabase({ name: 'UserDatabase.db' });
+
 const Child1 = ({navigation})=>{
     return (
         <View style={styles.screen}>
