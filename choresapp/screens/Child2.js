@@ -1,20 +1,15 @@
 import React from 'react';
 import {View, Text, StyleSheet, Button} from 'react-native';
-
-const Adult1 = ({navigation})=>{
+const Child2 = ({ navigation })=>{
     return (
         <View style={styles.screen}>
-            <Text style={styles.title}>Aikuisen näkymä 1</Text>
+            <Text style={styles.title}>Lapsen näkymä 2</Text>
             <Button 
             title='Back'
             onPress={() => navigation.goBack()}/>
-            <Button
-            title='Add task'
-            onPress={() => navigation.navigate('Adult2')}/>
         </View>
     );
 }
-
 const styles=StyleSheet.create({
     screen:{
         alignItems: 'center',
@@ -25,5 +20,4 @@ const styles=StyleSheet.create({
         justifyContent:'center',
     }
 });
-
-export default Adult1;
+export default Child2;

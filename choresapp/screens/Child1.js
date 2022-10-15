@@ -1,7 +1,7 @@
 import React from 'react';
 import {View, Text, StyleSheet} from 'react-native';
 
-const Child1 = (props)=>{
+const Child1 = ({navigation})=>{
     return (
         <View style={styles.screen}>
             <Text style={styles.title}>Lapsen näkymä 1</Text>
