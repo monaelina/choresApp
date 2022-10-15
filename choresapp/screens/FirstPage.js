@@ -1,4 +1,5 @@
 import React from 'react';
+import { openDatabase } from 'react-native-sqlite-storage';
 import {
   SafeAreaView,
   StyleSheet,

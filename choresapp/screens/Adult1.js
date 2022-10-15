@@ -1,5 +1,6 @@
 import React from 'react';
 import {View, Text, StyleSheet, Button} from 'react-native';
+import { openDatabase } from 'react-native-sqlite-storage';
 
 const Adult1 = ({navigation})=>{
     return (

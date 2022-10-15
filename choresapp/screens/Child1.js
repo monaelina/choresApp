@@ -1,5 +1,6 @@
 import React from 'react';
 import {View, Text, StyleSheet} from 'react-native';
+import { openDatabase } from 'react-native-sqlite-storage';
 
 const Child1 = ({navigation})=>{
     return (
