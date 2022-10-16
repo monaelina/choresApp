@@ -1,11 +1,31 @@
-import React from 'react';
-import {View, Text, StyleSheet, Button} from 'react-native';
+import React, {useState} from 'react';
+import {View, Text, TextInput, StyleSheet, Button, ScrollView, Alert, SafeAreaView, KeyboardAvoidingView} from 'react-native';
 import { openDatabase } from 'react-native-sqlite-storage';
 
 var db = openDatabase({ name: 'UserDatabase.db' });
 
 const Adult2 = ({ navigation })=>{
-    db.transaction(function (tx) {
+    let [taskName, setTaskName] = useState('');
+    let [taskPrice, setTaskPrice] = useState('');
+    let [taskValue, setTaskValue] = useState('');
+   
+    let register_task = () => {
+      console.log(taskName, taskPrice, taskValue);
+   
+      if (!taskName) {
+        alert('Please fill task name');
+        return;
+      }
+      if (!taskPrice) {
+        alert('Please fill Task Price');
+        return;
+      }
+      if (!taskValue) {
+        alert('Please fill task value');
+        return;
+      }
+   
+      db.transaction(function (tx) {
         tx.executeSql(
           'INSERT INTO table_tasks (task_name, task_price, task_value) VALUES (?,?,?)',
           [taskName, taskPrice, taskValue],
@@ -14,7 +34,7 @@ const Adult2 = ({ navigation })=>{
             if (results.rowsAffected > 0) {
               Alert.alert(
                 'Success',
-                'Task added succesfully',
+                'Task registered Successfully',
                 [
                   {
                     text: 'Ok',
@@ -23,27 +43,64 @@ const Adult2 = ({ navigation })=>{
                 ],
                 { cancelable: false }
               );
-            } else alert('Task failure');
+            } else alert('Task Registration Failed');
           }
         );
       });
+    };
     return (
-        <View style={styles.screen}>
-            <Text style={styles.title}>Aikuisen näkymä 2</Text>
-            <Button 
-            title='Back'
-            onPress={() => navigation.goBack()}/>
-        </View>
-    );
+        <SafeAreaView style={{ flex: 1 }}>
+        <View style={{ flex: 1, backgroundColor: 'white' }}>
+          <View style={{ flex: 1 }}>
+            <ScrollView keyboardShouldPersistTaps="handled">
+              <KeyboardAvoidingView
+                behavior="padding"
+                style={{ flex: 1, justifyContent: 'space-between' }}>
+                <TextInput
+                  placeholder="Enter task name"
+                  onChangeText={
+                    (taskName) => setTaskName(taskName)
+                  }
+                  style={{ padding: 10, }}
+                />
+                <TextInput
+                  placeholder="Enter Price"
+                  onChangeText={
+                    (taskPrice) => setTaskPrice(taskPrice)
+                  }
+                  maxLength={3}
+                  keyboardType="numeric"
+                  style={{ padding: 10 }}
+                />
+                <TextInput
+                  placeholder="Enter Value"
+                  onChangeText={
+                    (taskValue) => setTaskValue(taskValue)
+                  }
+                  maxLength={3}
+                  keyboardType="numeric"
+                  style={{ padding: 10 }}
+                />
+                <Button title="Submit" onPress={register_task} />
+              </KeyboardAvoidingView>
+            </ScrollView>
+          </View>
+          <Text
+          style={{
+            fontSize: 18,
+            textAlign: 'center',
+            color: 'grey'
+          }}>
+        </Text>
+        <Text
+          style={{
+            fontSize: 16,
+            textAlign: 'center',
+            color: 'grey'
+          }}>
+        </Text>
+      </View>
+    </SafeAreaView>
+  );
 };
-const styles=StyleSheet.create({
-    screen:{
-        alignItems: 'center',
-    },
-    
-    title:{
-        fontSize:30,
-        justifyContent:'center',
-    }
-});
 export default Adult2;
