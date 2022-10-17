@@ -6,9 +6,9 @@ import {
   StyleSheet, 
   Button, 
   TouchableOpacity,
-  Icon,
   SafeAreaView} from 'react-native';
 import { openDatabase } from 'react-native-sqlite-storage';
+import Icon from 'react-native-vector-icons/FontAwesome';
 
 import TaskList from '../components/TaskList/';
 
@@ -72,12 +72,13 @@ const Adult1 = ({navigation})=>{
           <View
             key={item.user_id}
             style={{ backgroundColor: 'white', padding: 20 }}>
-        {/*   <TouchableOpacity>
+          <TouchableOpacity>
                <Icon name="star" size={50} color="gold" />
-        </TouchableOpacity> */}
-            <Text>{item.task_name}   {item.task_price}€</Text><Button
+        </TouchableOpacity>
+            <Text>{item.task_name}   {item.task_price}€</Text>
+            {/* <Button
             title=''
-            onPress={change_value}/>
+            onPress={change_value}/> */}
             <Text>Value: {item.task_value}</Text>
           </View>
         );
