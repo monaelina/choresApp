@@ -53,7 +53,7 @@ const Child2 = ({navigation})=>{
                {item.task_value == 1 ? <Icon name="star" size={50} color="gold" />:null}
                {item.task_value == 2 ? <Icon name="star" size={50} color="green" />:null}
           </TouchableOpacity>
-            <Text>{item.task_name}   {item.task_price}€  {item.task_value}</Text>
+            <Text>{item.task_name}   {item.task_price}€</Text>
             
           </View>
         );
