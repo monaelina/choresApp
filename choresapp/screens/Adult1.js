@@ -44,27 +44,12 @@ const Adult1 = ({navigation})=>{
         );
       };
 
-      let change_value = () => {
-        if ({task_value} = 0) {
-          <Button
-          title='Undone'
-          style={styles.undoneButton}
-          />
-          }
+      const updateBalance = () => {
+          
+      }
 
-        if ({task_value} = 1) {
-          <Button
-          title = 'Done'
-          style={styles.acceptButton}
-          />
-        }
+      const changeValue = () => {
 
-        if ({task_value} = 2) {
-          <Button
-            title='Accepted'
-          style={styles.acceptedButton}
-          />
-        }
       }
      
       let listItemView = (item) => {
@@ -78,19 +63,19 @@ const Adult1 = ({navigation})=>{
               {item.task_value == 2 ? <Icon name="star" size={50} color="green" />:null}
         </TouchableOpacity>
             <Text>{item.task_name}   {item.task_price}€</Text>
-            {/* <Button
-            title=''
-            onPress={change_value}/> */}
+          <TouchableOpacity>
+            {item.task_value == 0 ? <Button title='undone' style={styles.undoneButton} onClick={changeValue}/>:null}
+            {item.task_value == 1 ? <Button title='Accept' style={styles.acceptButton} onClick={updateBalance}/>:null}
+            {item.task_value == 2 ? <Button title='Accepted' style={styles.acceptedButton} onClick/>:null}
+          </TouchableOpacity>
             <Text>Value: {item.task_value}</Text>
           </View>
         );
       };
+
     return (
       <SafeAreaView style={{flex:1}}>
         <View style={styles.screen}>  
-          {/*  <Button 
-            title='Back'
-    onPress={() => navigation.goBack()}/> */}
             <Button 
             title='Add task'
             onPress={() => navigation.navigate('Adult2')}/>
@@ -119,16 +104,16 @@ const styles=StyleSheet.create({
     },
 
     undoneButton: {
-      color: 'grey',
+      backgroundColor: 'grey',
     },
 
     acceptButton: {
-      color: 'purple',
+      backgroundColor: 'purple',
     },
 
     acceptedButton: {
-      color: 'green'
-    }
+      backgroundColor: 'green',
+    },
 });
 
 export default Adult1;
