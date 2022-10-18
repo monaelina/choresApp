@@ -73,7 +73,9 @@ const Adult1 = ({navigation})=>{
             key={item.user_id}
             style={{ backgroundColor: 'white', padding: 20 }}>
           <TouchableOpacity>
-               <Icon name="star" size={50} color="gold" />
+              {item.task_value == 0 ? <Icon name="star" size={50} color="silver" />:null}
+              {item.task_value == 1 ? <Icon name="star" size={50} color="gold" />:null}
+              {item.task_value == 2 ? <Icon name="star" size={50} color="green" />:null}
         </TouchableOpacity>
             <Text>{item.task_name}   {item.task_price}€</Text>
             {/* <Button

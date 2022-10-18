@@ -1,24 +1,82 @@
-import React, {useState} from 'react';
-import {Button, FlatList, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import React, {useState, useEffect} from 'react';
+import {FlatList, SafeAreaView,  StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import { openDatabase } from 'react-native-sqlite-storage';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
-import TaskList from '../components/TaskList';
+import TaskList from '../components/TaskList/';
+import { updateTaskValue } from '../database/db';
 
 var db = openDatabase({ name: 'UserDatabase.db' });
 
+const Child2 = ({navigation})=>{
+    let [flatListItems, setFlatListItems] = useState([]);
 
-const Child2 = ({ navigation })=>{
-    //const [taskList, addTask]=useState(["Vacuum house", "Clean the bathroom","Take the trash out","Walk the dog","Bake a cake to granny"]);
     // let [taskId, setTaskId] = useState();
     // let [taskName, setTaskName] = useState('');
     // let [taskPrice, setTaskPrice] = useState('');
     // let [taskValue, setTaskValue] = useState('');
+    
+    useEffect(() => {
+        db.transaction((tx) => {
+            tx.executeSql(
+                'SELECT * FROM table_tasks',
+                [],
+                (tx, results) => {
+                    var temp = [];
+                    for (let i = 0; i < results.rows.length; ++i)
+                    temp.push(results.rows.item(i));
+                    setFlatListItems(temp);
+                }
+            );
+        });
+    }, []);
+
+    let listViewItemSeparator = () => {
+        return (
+          <View
+            style={{
+              height: 0.2,
+              width: '100%',
+              backgroundColor: '#808080'
+            }}
+          />
+        );
+      };
+     
+      let listItemView = (item) => {
+        return (
+          <View
+            key={item.user_id}
+            style={styles.listItemStyle}>
+          <TouchableOpacity onPress={updateTaskInDb}>
+               {item.task_value == 0 ? <Icon name="star" size={50} color="silver" />:null}
+               {item.task_value == 1 ? <Icon name="star" size={50} color="gold" />:null}
+               {item.task_value == 2 ? <Icon name="star" size={50} color="green" />:null}
+          </TouchableOpacity>
+            <Text>{item.task_name}   {item.task_price}€  {item.task_value}</Text>
+            
+          </View>
+        );
+      };
+
+      async function updateTaskInDb(){
+        try{
+          const dbResult = await updateTaskValue(1);
+          console.log(task_id+ ": " +task_value)
+        }
+        catch(err){
+          console.log(err);
+        }
+        finally{
+          //No need to do anything
+        }
+      }
+
 
     // let updateValue = (value) => {
     //     setTaskValue(1);
     // }
-    
+
     // let searchTask = () => {
     //     console.log(taskId);
     //     db.transaction((tx) => {
@@ -60,37 +118,33 @@ const Child2 = ({ navigation })=>{
     //         );
     //       });
     //     };
-    // }
-         
+  
 
-    
-
-    return (  
-        <View style={styles.screen}>
-            <Text style={styles.title}>Choose the task you have done</Text>
-            {/* <FlatList 
-                data={taskList}
-                keyExtractor={(item, index) => index.toString()}
-                renderItem={(item)=>
-                <View style={styles.listItemStyle}> 
-                    <TouchableOpacity>
-                        <Icon name="star" size={50} color="gold" />
-                    </TouchableOpacity>
-                    <Text>{item.item}</Text>
-                </View>}
-            /> */}
-            
-            <TaskList/>
-           
-            <Button 
-            title='Back'
-            onPress={() => navigation.goBack()}/>
+    return (
+        <View style={styles.screen}>  
+            <Text style={styles.title}>Choose task you have done</Text>
+            <FlatList
+              data={flatListItems}
+              ItemSeparatorComponent={listViewItemSeparator}
+              keyExtractor={(item, index) => index.toString()}
+              renderItem={({ item }) => listItemView(item)} />
         </View>
-       
     );
 }
+
+
 const styles=StyleSheet.create({
-    listItemStyle:{
+    screen:{
+        padding: 20,
+        alignItems: 'center',
+    },
+    
+    title:{
+        padding: 20,
+        fontSize:30,
+        justifyContent:'center',
+    },
+        listItemStyle:{
         //borderWidth:1,
         padding:5,
        //backgroundColor:"#abc",
@@ -100,14 +154,14 @@ const styles=StyleSheet.create({
         alignItems:"center",
         //marginLeft:20,
         fontSize:25,
-      },
-    screen:{
-        alignItems: 'center',
-    },
-    
-    title:{
-        fontSize:30,
-        justifyContent:'center',
-    }
+      }
 });
+
 export default Child2;
+
+
+
+
+ 
+
+            
