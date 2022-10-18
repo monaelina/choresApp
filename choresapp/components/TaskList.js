@@ -38,7 +38,7 @@ const TaskList = () => {
     return (
       <View
         key={item.task_id}
-        style={{ backgroundColor: 'white', padding: 20 }}>
+        style={{ backgroundColor: 'white', padding: 10 }}>
         <Text>Name: {item.task_name}</Text>
         <Text>Price: {item.task_price}</Text>
         <Text>Value: {item.task_value}</Text>
@@ -48,7 +48,7 @@ const TaskList = () => {
  
   return (
     <SafeAreaView style={{ flex: 1 }}>
-      <View style={{ flex: 1, backgroundColor: 'white' }}>
+      <View style={{felx: 1, backgroundColor: 'white' }}>
         <View style={{ flex: 1 }}>
           <FlatList
             data={flatListItems}
