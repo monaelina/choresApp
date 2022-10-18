@@ -6,7 +6,8 @@ import {
   StyleSheet, 
   Button, 
   TouchableOpacity,
-  SafeAreaView} from 'react-native';
+  SafeAreaView,
+  ScrollView} from 'react-native';
 import { openDatabase } from 'react-native-sqlite-storage';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
@@ -54,9 +55,10 @@ const Adult1 = ({navigation})=>{
      
       let listItemView = (item) => {
         return (
+        <ScrollView style={styles.scrollviewstyle}>
           <View
             key={item.user_id}
-            style={{ backgroundColor: 'white', padding: 20 }}>
+            style={{ backgroundColor: 'white', padding: 30 }}>
           <TouchableOpacity>
               {item.task_value == 0 ? <Icon name="star" size={50} color="silver" />:null}
               {item.task_value == 1 ? <Icon name="star" size={50} color="gold" />:null}
@@ -68,8 +70,8 @@ const Adult1 = ({navigation})=>{
             {item.task_value == 1 ? <Button title='Accept' style={styles.acceptButton} onClick={updateBalance}/>:null}
             {item.task_value == 2 ? <Button title='Accepted' style={styles.acceptedButton} onClick/>:null}
           </TouchableOpacity>
-            <Text>Value: {item.task_value}</Text>
           </View>
+         </ScrollView>
         );
       };
 
@@ -95,6 +97,10 @@ const styles=StyleSheet.create({
     screen:{
         padding: 20,
         alignItems: 'center',
+    },
+
+    scrollviewstyle: {
+      padding: 5,
     },
     
     title:{
