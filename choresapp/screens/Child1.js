@@ -2,7 +2,7 @@ import React, { useState} from 'react';
 import {Button, StyleSheet, Text, TextInput, View  } from 'react-native';
 import { openDatabase } from 'react-native-sqlite-storage';
 
-var db = openDatabase({ name: 'UserDatabase.db' });
+var db = openDatabase({ name: 'TaskDatabase.db' });
 
 
 const Child1 = ({navigation})=>{

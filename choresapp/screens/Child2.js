@@ -1,12 +1,12 @@
 import React, {useState, useEffect} from 'react';
-import {FlatList, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {FlatList, ScrollView, StyleSheet, Text, TouchableOpacity, View, Button} from 'react-native';
 import { openDatabase } from 'react-native-sqlite-storage';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
 import TaskList from '../components/TaskList/';
 import { updateTaskValue } from '../database/db';
 
-var db = openDatabase({ name: 'UserDatabase.db' });
+var db = openDatabase({ name: 'TaskDatabase.db' });
 
 const Child2 = ({navigation})=>{
     let [flatListItems, setFlatListItems] = useState([]);
@@ -47,15 +47,16 @@ const Child2 = ({navigation})=>{
       let listItemView = (item) => {
         return (
           <View
-            key={item.user_id}
+            key={item.task_id}
             style={styles.listItemStyle}>
             <TouchableOpacity onPress={searchAndUpdate}>
                {item.task_value == 0 ? <Icon name="star" size={50} color="silver" />:null}
                {item.task_value == 1 ? <Icon name="star" size={50} color="gold" />:null}
                {item.task_value == 2 ? <Icon name="star" size={50} color="green" />:null}
-            </TouchableOpacity>
-            <Text>{item.task_name}   {item.task_price}€ {item.task_value}</Text>
-              
+              <Text> {item.task_id}: {item.task_name}   {item.task_price}€ {item.task_value}</Text> 
+            </TouchableOpacity> 
+            
+           
           </View>
         );
       };
@@ -75,13 +76,16 @@ const Child2 = ({navigation})=>{
 
 
     let updateValue = (taskValue) => {
-        setTaskValue(taskValue=1);
+        setTaskValue(taskValue);
+  //      setTaskId(taskId);
+    //    setTaskName(taskName);
+      //  setTaskPrice(taskPrice);
     }
 
     let searchTask = () => {
         console.log(taskId);
         db.transaction((tx) => {
-            Text.executeSql(
+            tx.executeSql(
                 'SELECT * FROM table_tasks where task_id = ?',
                 [taskId],
                 (tx, results) => {
@@ -89,7 +93,7 @@ const Child2 = ({navigation})=>{
                     if (len > 0) {
                       let res = results.rows.item(0);
                       updateValue(
-                        res.taskValue
+                        res.task_value
                       );
                     } else {
                       alert('No task found');
@@ -104,8 +108,8 @@ const Child2 = ({navigation})=>{
       console.log(taskId, taskName, taskPrice, taskValue);
         db.transaction((tx) => {
             tx.executeSql(
-              'UPDATE table_tasks set task_name=?, task_price=? , task_value=? where task_id=?',
-              [taskName, taskPrice, taskValue],
+              'UPDATE table_tasks set task_value=? where task_id=?',
+              [taskValue],
               (tx, results) => {
                 console.log('Results', results.rowsAffected);
                 if (results.rowsAffected > 0) {
@@ -121,17 +125,15 @@ const Child2 = ({navigation})=>{
           });
         };
   
-    async function searchAndUpdate(){
+    let inputTaskId =()=> {
+      setTaskId(taskId);
+    };
+
+    const searchAndUpdate=()=>{
+      inputTaskId();
       searchTask();
-      updateTask();
+ //     updateTask();
       }
-      //   catch(err){
-      //     console.log(err);
-      //   }
-      //   finally{
-      //     //No need to do anything
-      //   }
-      // }
         
     return (
         <View style={styles.screen}>  
@@ -142,6 +144,7 @@ const Child2 = ({navigation})=>{
               keyExtractor={(item, index) => index.toString()}
               renderItem={({ item }) => listItemView(item)} />
         </View>
+
     );
 }
 

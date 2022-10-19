@@ -13,7 +13,7 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 
 import TaskList from '../components/TaskList/';
 
-var db = openDatabase({ name: 'UserDatabase.db' });
+var db = openDatabase({ name: 'TaskDatabase.db' });
 
 const Adult1 = ({navigation})=>{
     let [flatListItems, setFlatListItems] = useState([]);

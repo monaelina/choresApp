@@ -9,7 +9,7 @@ import {
   TouchableOpacity,
 } from 'react-native';
 
-var db = openDatabase({ name: 'UserDatabase.db' });
+var db = openDatabase({ name: 'TaskDatabase.db' });
 
 //import { NavigationContainer } from '@react-navigation/native';
 //import { createNativeStackNavigator } from '@react-navigation/native-stack';

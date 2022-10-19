@@ -2,7 +2,7 @@ import React, {useState} from 'react';
 import {View, Text, TextInput, StyleSheet, Button, ScrollView, Alert, SafeAreaView, KeyboardAvoidingView} from 'react-native';
 import { openDatabase } from 'react-native-sqlite-storage';
 
-var db = openDatabase({ name: 'UserDatabase.db' });
+var db = openDatabase({ name: 'TaskDatabase.db' });
 
 const Adult2 = ({ navigation })=>{
     let [taskName, setTaskName] = useState('');
@@ -30,7 +30,7 @@ const Adult2 = ({ navigation })=>{
           'INSERT INTO table_tasks (task_name, task_price, task_value) VALUES (?,?,?)',
           [taskName, taskPrice, taskValue],
           (tx, results) => {
-            console.log('Results', results.rowsAffected);
+            console.log('Results adult2', results.rowsAffected);
             if (results.rowsAffected > 0) {
               Alert.alert(
                 'Success',

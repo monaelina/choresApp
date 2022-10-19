@@ -2,9 +2,30 @@ import React, {useEffect} from 'react';
 
 import { openDatabase } from 'react-native-sqlite-storage';
 
-var db = openDatabase({ name: 'UserDatabase.db' });
+var db = openDatabase({ name: 'TaskDatabase.db' });
 var tableName="table_tasks";
 
+
+export const updateBalance=(id, breed, weight)=>{
+    const promise=new Promise((resolve, reject)=>{
+        db.transaction((tx)=>{
+            //Here we use the Prepared statement, just putting placeholders to the values to be inserted
+            tx.executeSql('update '+tableName+' set breed=?, weight=? where id=?;',
+            //And the values come here
+            [breed, weight, id],
+            //If the transaction succeeds, this is called
+            ()=>{
+                    resolve();
+            },
+            //If the transaction fails, this is called
+            (_,err)=>{
+                reject(err);
+            }
+            );
+        });
+    });
+    return promise;
+};
 
 // export const updateTaskValue=(task_value)=>{
 //     const promise=new Promise((resolve, reject)=>{
@@ -18,7 +39,7 @@ var tableName="table_tasks";
 //                     resolve();
 //             },
 //             //If the transaction fails, this is called
-//             (_,err)=>{
+//             (_,err)=>{ 
 //                 reject(err);
 //             }
 //             );
