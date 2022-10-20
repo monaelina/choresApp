@@ -7,7 +7,7 @@ var db = openDatabase({ name: 'TaskDatabase.db' });
 const Adult2 = ({ navigation })=>{
     let [taskName, setTaskName] = useState('');
     let [taskPrice, setTaskPrice] = useState('');
-    let [taskValue, setTaskValue] = useState('');
+    let [taskValue, setTaskValue] = useState('0');
    
     let register_task = () => {
       console.log(taskName, taskPrice, taskValue);
@@ -72,7 +72,7 @@ const Adult2 = ({ navigation })=>{
                   keyboardType="numeric"
                   style={{ padding: 10 }}
                 />
-                <TextInput
+             {/*  <TextInput
                   placeholder="Enter Value"
                   onChangeText={
                     (taskValue) => setTaskValue(taskValue)
@@ -80,7 +80,7 @@ const Adult2 = ({ navigation })=>{
                   maxLength={3}
                   keyboardType="numeric"
                   style={{ padding: 10 }}
-                />
+                />   */}
                 <Button title="Submit" onPress={register_task} />
               </KeyboardAvoidingView>
             </ScrollView>
