@@ -1,10 +1,10 @@
 import React, {useState, useEffect} from 'react';
-import {FlatList, ScrollView, StyleSheet, Text, TouchableOpacity, View, Button} from 'react-native';
+import {FlatList, StyleSheet, Text, TouchableOpacity, View, Button} from 'react-native';
 import { openDatabase } from 'react-native-sqlite-storage';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
 import TaskList from '../components/TaskList/';
-import { updateTaskValue } from '../database/db';
+import { updateTaskValue, fetchAllTask } from '../database/db';
 
 var db = openDatabase({ name: 'TaskDatabase.db' });
 
@@ -51,7 +51,7 @@ const Child2 = ({navigation})=>{
           <View
             key={item.task_id}
             style={styles.listItemStyle}>
-            <TouchableOpacity onPress={()=>{updateTaskInDb(item.index)}}>
+            <TouchableOpacity onPress={()=>{}}>
                {item.task_value == 0 ? <Icon name="star" size={50} color="silver" />:null}
                {item.task_value == 1 ? <Icon name="star" size={50} color="gold" />:null}
                {item.task_value == 2 ? <Icon name="star" size={50} color="green" />:null}
@@ -64,9 +64,11 @@ const Child2 = ({navigation})=>{
       };
 
       async function updateTaskInDb(){
+        console.log("updateTaskInDb");
         try{
-          const dbResult = await updateTaskValue(idToUpdate, "nuku", 10, 1);
-          console.log("updateTaskInDb");
+          const dbResult = await updateTaskValue(3, "hoida naapurin lapset", 20, 1);
+          console.log("plääh");
+          //readAllTask();
         }
         catch(err){
           console.log(err);
@@ -76,10 +78,29 @@ const Child2 = ({navigation})=>{
         }
       }
 
-      const onPress = (item) => {
+      // async function readAllTask(){
+      //   try{
+      //     const dbResult = fetchAllTask();
+      //     console.log("dbResult readAllTask in child2");
+      //     console.log(dbResult);
+      //     setFlatListItems(dbResult);
+      //   }
+      //   catch(err){
+      //     console.log("Error: "+err);
+      //   }
+      //   finally{
+      //     console.log("All fish are red - really?");
+      //   }
+      // }
+
+      const selectItemToUpdate = () =>{
         setIdToUpdate();
+      }
+
+      const onPress = (item) => {
+        selectItemToUpdate(item);
         console.log("ID: "+ idToUpdate);
-        updateTaskInDb();
+        updateTaskInDb(idToUpdate);
       }
 
     // let updateValue = (taskId) => {
@@ -131,11 +152,7 @@ const Child2 = ({navigation})=>{
     //         );
     //       });
     //     };
-  
-    // let selectItemToUpdate =()=> {
-    //   setTaskId(flatListItems.item);
-    //   console.log(taskId);
-    // };
+
 
     // const searchAndUpdate=()=>{
     //   selectItemToUpdate();
@@ -151,6 +168,7 @@ const Child2 = ({navigation})=>{
               ItemSeparatorComponent={listViewItemSeparator}
               keyExtractor={(item, index) => index.toString()}
               renderItem={({ item }) => listItemView(item)} />
+              <Button title="UPDATE" onPress={updateTaskInDb}>UPDATE</Button>
         </View>
 
     );
