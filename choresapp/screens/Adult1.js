@@ -45,9 +45,10 @@ const Adult1 = ({navigation})=>{
         );
       };
 
-      const updateBalance = () => {
-          
-      }
+   //   const updateBalance = () => {
+   //       updatedBalance(taskPrice + myBalance);
+   //       console.log('balancen päivitys')
+   //   };
 
       const changeValue = () => {
 
@@ -63,12 +64,12 @@ const Adult1 = ({navigation})=>{
               {item.task_value == 0 ? <Icon name="star" size={50} color="silver" />:null}
               {item.task_value == 1 ? <Icon name="star" size={50} color="gold" />:null}
               {item.task_value == 2 ? <Icon name="star" size={50} color="green" />:null}
-        </TouchableOpacity>
+          </TouchableOpacity>
             <Text>{item.task_name}   {item.task_price}€</Text>
           <TouchableOpacity>
-            {item.task_value == 0 ? <Button title='undone' style={styles.undoneButton} onClick={changeValue}/>:null}
-            {item.task_value == 1 ? <Button title='Accept' style={styles.acceptButton} onClick={updateBalance}/>:null}
-            {item.task_value == 2 ? <Button title='Accepted' style={styles.acceptedButton} onClick/>:null}
+            {item.task_value == 0 ? <Button title='undone' style={styles.undoneButton}/>:null}
+            {item.task_value == 1 ? <Button title='Accept' style={styles.acceptButton}/>:null}
+            {item.task_value == 2 ? <Button title='Accepted' style={styles.acceptedButton}/>:null}
           </TouchableOpacity>
           </View>
          </ScrollView>

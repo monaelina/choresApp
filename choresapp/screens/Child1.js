@@ -6,7 +6,7 @@ var db = openDatabase({ name: 'TaskDatabase.db' });
 
 
 const Child1 = ({navigation})=>{
-    const [myBalance, setmyBalance]=useState(50);
+    const [myBalance, setmyBalance]=useState('');
     return (
         <View style={styles.screen}>
             <Text style={styles.title}>My Account</Text>
