@@ -27,26 +27,26 @@ export const updateBalance=(id, breed, weight)=>{
     return promise;
 };
 
-// export const updateTaskValue=(task_value)=>{
-//     const promise=new Promise((resolve, reject)=>{
-//         db.transaction((tx)=>{
-//             //Here we use the Prepared statement, just putting placeholders to the values to be inserted
-//             tx.executeSql('update '+tableName+' set task_value=? where id=?;',
-//             //And the values come here
-//             [1],
-//             //If the transaction succeeds, this is called
-//             ()=>{
-//                     resolve();
-//             },
-//             //If the transaction fails, this is called
-//             (_,err)=>{ 
-//                 reject(err);
-//             }
-//             );
-//         });
-//     });
-//     return promise;
-// };
+export const updateTaskValue=(task_id, task_name, task_price, task_value)=>{
+    const promise=new Promise((resolve, reject)=>{
+        db.transaction((tx)=>{
+            //Here we use the Prepared statement, just putting placeholders to the values to be inserted
+            tx.executeSql('update '+tableName+' set task_value=? where task_id=?;',
+            //And the values come here
+            [task_id, task_name, task_price, task_value],
+            //If the transaction succeeds, this is called
+            ()=>{
+                    resolve();
+            },
+            //If the transaction fails, this is called
+            (_,err)=>{ 
+                reject(err);
+            }
+            );
+        });
+    });
+    return promise;
+};
 
 // export const fetchAllTask=()=>{
 //     const promise=new Promise((resolve, reject)=>{

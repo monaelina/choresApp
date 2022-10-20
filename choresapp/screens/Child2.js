@@ -10,12 +10,14 @@ var db = openDatabase({ name: 'TaskDatabase.db' });
 
 const Child2 = ({navigation})=>{
     let [flatListItems, setFlatListItems] = useState([]);
+    let [idToUpdate, setIdToUpdate] = useState('');
 
-    let [taskId, setTaskId] = useState();
-    let [taskName, setTaskName] = useState('');
-    let [taskPrice, setTaskPrice] = useState('');
-    let [taskValue, setTaskValue] = useState('');
-    
+    // let [taskId, setTaskId] = useState('');
+    // let [taskName, setTaskName] = useState('');
+    // let [taskPrice, setTaskPrice] = useState('');
+    // let [taskValue, setTaskValue] = useState('');
+
+
     useEffect(() => {
       db.transaction((tx) => {
           tx.executeSql(
@@ -49,7 +51,7 @@ const Child2 = ({navigation})=>{
           <View
             key={item.task_id}
             style={styles.listItemStyle}>
-            <TouchableOpacity onPress={searchAndUpdate}>
+            <TouchableOpacity onPress={()=>{updateTaskInDb(item.index)}}>
                {item.task_value == 0 ? <Icon name="star" size={50} color="silver" />:null}
                {item.task_value == 1 ? <Icon name="star" size={50} color="gold" />:null}
                {item.task_value == 2 ? <Icon name="star" size={50} color="green" />:null}
@@ -61,79 +63,85 @@ const Child2 = ({navigation})=>{
         );
       };
 
-      // async function updateTaskInDb(){
-      //   try{
-      //     const dbResult = await updateTaskValue(1);
-      //     console.log(task_id+ ": " +task_value)
-      //   }
-      //   catch(err){
-      //     console.log(err);
-      //   }
-      //   finally{
-      //     //No need to do anything
-      //   }
-      // }
-
-
-    let updateValue = (taskValue) => {
-        setTaskValue(taskValue);
-  //      setTaskId(taskId);
-    //    setTaskName(taskName);
-      //  setTaskPrice(taskPrice);
-    }
-
-    let searchTask = () => {
-        console.log(taskId);
-        db.transaction((tx) => {
-            tx.executeSql(
-                'SELECT * FROM table_tasks where task_id = ?',
-                [taskId],
-                (tx, results) => {
-                    var len = results.rows.length;
-                    if (len > 0) {
-                      let res = results.rows.item(0);
-                      updateValue(
-                        res.task_value
-                      );
-                    } else {
-                      alert('No task found');
-                      updateValue('');
-                    }
-                  }      
-                );       
-              });
-            };
-
-    let updateTask =()=> {
-      console.log(taskId, taskName, taskPrice, taskValue);
-        db.transaction((tx) => {
-            tx.executeSql(
-              'UPDATE table_tasks set task_value=? where task_id=?',
-              [taskValue],
-              (tx, results) => {
-                console.log('Results', results.rowsAffected);
-                if (results.rowsAffected > 0) {
-                  Alert.alert(
-                    'Success',
-                    'Task updated successfully',
-                    [],
-                    { cancelable: false }
-                  );
-                } else alert('Updation Failed');
-              }
-            );
-          });
-        };
-  
-    let inputTaskId =()=> {
-      setTaskId(taskId);
-    };
-
-    const searchAndUpdate=()=>{
-      inputTaskId();
-      searchTask();
- //     updateTask();
+      async function updateTaskInDb(){
+        try{
+          const dbResult = await updateTaskValue(idToUpdate, "nuku", 10, 1);
+          console.log("updateTaskInDb");
+        }
+        catch(err){
+          console.log(err);
+        }
+        finally{
+          //No need to do anything
+        }
       }
+
+      const onPress = (item) => {
+        setIdToUpdate();
+        console.log("ID: "+ idToUpdate);
+        updateTaskInDb();
+      }
+
+    // let updateValue = (taskId) => {
+    //   setTaskValue(taskValue);
+    //   setTaskId(taskId);
+    //   setTaskName(taskName);
+    //   setTaskPrice(taskPrice);
+    // }
+
+    // let searchTask = () => {
+    //     console.log(taskId);
+    //     db.transaction((tx) => {
+    //         tx.executeSql(
+    //             'SELECT * FROM table_tasks where task_id = ?',
+    //             [taskId],
+    //             (tx, results) => {
+    //                 var len = results.rows.length;
+    //                 if (len > 0) {
+    //                   let res = results.rows.item(0);
+    //                   updateValue(
+    //                     res.task_value
+    //                   );
+    //                 } else {
+    //                   alert('No task found');
+    //                   updateValue('');
+    //                 }
+    //               }      
+    //             );       
+    //           });
+    //         };
+
+    // let updateTask =()=> {
+    //   console.log(taskId, taskName, taskPrice, taskValue);
+    //     db.transaction((tx) => {
+    //         tx.executeSql(
+    //           'UPDATE table_tasks set task_value=? where task_id=?',
+    //           [taskValue],
+    //           (tx, results) => {
+    //             console.log('Results', results.rowsAffected);
+    //             if (results.rowsAffected > 0) {
+    //               Alert.alert(
+    //                 'Success',
+    //                 'Task updated successfully',
+    //                 [],
+    //                 { cancelable: false }
+    //               );
+    //             } else alert('Updation Failed');
+    //           }
+    //         );
+    //       });
+    //     };
+  
+    // let selectItemToUpdate =()=> {
+    //   setTaskId(flatListItems.item);
+    //   console.log(taskId);
+    // };
+
+    // const searchAndUpdate=()=>{
+    //   selectItemToUpdate();
+    //   searchTask();
+    //   //updateTask();
+    //   }
         
     return (
         <View style={styles.screen}>  
