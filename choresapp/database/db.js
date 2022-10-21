@@ -4,15 +4,15 @@ import { openDatabase } from 'react-native-sqlite-storage';
 
 var db = openDatabase({ name: 'TaskDatabase.db' });
 var tableName="table_tasks";
-var columnName='task_price'
+var columnName='task_price';
 
-export const updateBalance=(task_value)=>{
+export const updateBalance=()=>{
     const promise=new Promise((resolve, reject)=>{
         db.transaction((tx)=>{
             //Here we use the Prepared statement, just putting placeholders to the values to be inserted
-            tx.executeSql('select sum('+columnName+') from '+tableName+' where task_value=2',
+            tx.executeSql('SELECT SUM (task_price) from table_tasks where task_value=2',
             //And the values come here
-            [task_value],
+            [],
             //If the transaction succeeds, this is called
             ()=>{
                     resolve();

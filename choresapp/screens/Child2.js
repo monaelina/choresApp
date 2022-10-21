@@ -66,7 +66,7 @@ const Child2 = ({navigation})=>{
       async function updateTaskInDb(){
         console.log("updateTaskInDb");
         try{
-          const dbResult = await updateTaskValue(3, "hoida naapurin lapset", 20, 1);
+          const dbResult = await updateTaskValue(3, "hoida naapurin lapset", 20, 2);
           console.log("plääh");
           //readAllTask();
         }
