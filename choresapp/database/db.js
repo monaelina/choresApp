@@ -95,11 +95,11 @@ export const DeleteTask = (task_id) => {
   return promise;
   };
 
-  export const updateTask=(task_id)=>{
+  export const updateTask=(task_id, task_value, task_price, task_name)=>{
     const promise=new Promise((resolve, reject)=>{
         db.transaction((tx)=>{
-            tx.executeSql('update table_tasks set task_value=2 where task_id=?;',
-            [task_id],
+            tx.executeSql('update table_tasks set task_value=?, task_price=?, task_name=? where task_id=?;',
+            [task_id, task_value, task_price, task_name],
             ()=>{
                     resolve();
             },
