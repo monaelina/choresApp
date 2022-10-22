@@ -25,6 +25,7 @@ export const updateBalance=()=>{
             );
         });
     });
+    console.log('promise on: '+promise);
     return promise;
 };
 
@@ -70,6 +71,41 @@ export const updateTaskValue=(task_id, task_name, task_price, task_value)=>{
                     console.log(err);
                     reject(err);
                 }
+            );
+        });
+    });
+    return promise;
+};
+
+export const DeleteTask = (task_id) => {
+    const promise=new Promise((resolve, reject)=>{
+      db.transaction((tx)=>{
+      tx.executeSql(
+        'DELETE FROM  table_tasks where task_id=?',
+      [task_id],
+      ()=>{
+        resolve();
+  },
+  (_,err)=>{
+    reject(err);
+  }
+  );
+  });
+    });
+  return promise;
+  };
+
+  export const updateTask=(task_id)=>{
+    const promise=new Promise((resolve, reject)=>{
+        db.transaction((tx)=>{
+            tx.executeSql('update table_tasks set task_value=2 where task_id=?;',
+            [task_id],
+            ()=>{
+                    resolve();
+            },
+            (_,err)=>{
+                reject(err);
+            }
             );
         });
     });
