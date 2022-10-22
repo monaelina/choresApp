@@ -4,6 +4,7 @@ import {
   View, 
   Text, 
   StyleSheet, 
+  TextInput,
   Button, 
   TouchableOpacity,
   SafeAreaView,
@@ -17,6 +18,34 @@ var db = openDatabase({ name: 'TaskDatabase.db' });
 
 const Adult1 = ({navigation})=>{
     let [flatListItems, setFlatListItems] = useState([]);
+    let [inputTaskId, setInputTaskId] = useState('');
+
+    let DeleteTask = () => {
+      db.transaction((tx) => {
+        tx.executeSql(
+          'DELETE FROM  table_tasks where task_id=?',
+          [inputTaskId],
+          (tx, results) => {
+            console.log('Results', results.rowsAffected);
+            if (results.rowsAffected > 0) {
+              Alert.alert(
+                'Success',
+                'Task deleted successfully',
+                [
+                  {
+                    text: 'Ok',
+                    onPress: () => navigation.navigate('Adult1'),
+                  },
+                ],
+                { cancelable: false }
+              );
+            } else {
+              alert('Please insert a valid Task Id');
+            }
+          }
+        );
+      });
+    };
 
     useEffect(() => {
         db.transaction((tx) => {
@@ -82,6 +111,14 @@ const Adult1 = ({navigation})=>{
             <Button 
             title='Add task'
             onPress={() => navigation.navigate('Adult2')}/>
+            <TextInput
+            placeholder="Enter Task Id"
+            onChangeText={
+              (inputTaskId) => setInputTaskId(inputTaskId)
+            }
+            style={{ padding: 10 }}
+          />
+          <Button title="Delete Task" onPress={DeleteTask} />
             <Text style={styles.title}>Tasklist</Text>
             <FlatList
               data={flatListItems}
