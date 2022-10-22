@@ -51,7 +51,7 @@ const Child2 = ({navigation})=>{
           <View
             key={item.task_id}
             style={styles.listItemStyle}>
-            <TouchableOpacity onPress={()=>{}}>
+            <TouchableOpacity onPress={()=>{onPress(item.task_id)}}>
                {item.task_value == 0 ? <Icon name="star" size={50} color="silver" />:null}
                {item.task_value == 1 ? <Icon name="star" size={50} color="gold" />:null}
                {item.task_value == 2 ? <Icon name="star" size={50} color="green" />:null}
