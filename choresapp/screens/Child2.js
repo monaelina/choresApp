@@ -10,12 +10,12 @@ var db = openDatabase({ name: 'TaskDatabase.db' });
 
 const Child2 = ({navigation})=>{
     let [flatListItems, setFlatListItems] = useState([]);
-    let [idToUpdate, setIdToUpdate] = useState('');
+    const [updateIndex, setUpateIndex] = useState(-1);
 
-    // let [taskId, setTaskId] = useState('');
-    // let [taskName, setTaskName] = useState('');
-    // let [taskPrice, setTaskPrice] = useState('');
-    // let [taskValue, setTaskValue] = useState('');
+    const [taskId, setTaskId] = useState("");
+    const [taskName, setTaskName] = useState("");
+    const [taskPrice, setTaskPrice] = useState("");
+    const [taskValue, setTaskValue] = useState("");
 
 
     useEffect(() => {
@@ -51,7 +51,11 @@ const Child2 = ({navigation})=>{
           <View
             key={item.task_id}
             style={styles.listItemStyle}>
+<<<<<<< Updated upstream
             <TouchableOpacity onPress={()=>{onPress(item.task_id)}}>
+=======
+            <TouchableOpacity onPress={()=>{onPress}}>
+>>>>>>> Stashed changes
                {item.task_value == 0 ? <Icon name="star" size={50} color="silver" />:null}
                {item.task_value == 1 ? <Icon name="star" size={50} color="gold" />:null}
                {item.task_value == 2 ? <Icon name="star" size={50} color="green" />:null}
@@ -62,11 +66,11 @@ const Child2 = ({navigation})=>{
           </View>
         );
       };
-
+//3, "hoida naapurin lapset", 20, 2
       async function updateTaskInDb(){
         console.log("updateTaskInDb");
         try{
-          const dbResult = await updateTaskValue(3, "hoida naapurin lapset", 20, 2);
+          const dbResult = await updateTaskValue(flatListItems[updateIndex].taskId, taskName, taskPrice, 1);
           console.log("plääh");
           //readAllTask();
         }
@@ -93,13 +97,16 @@ const Child2 = ({navigation})=>{
       //   }
       // }
 
-      const selectItemToUpdate = () =>{
-        setIdToUpdate();
+      const setTaskToUpdate = (index) =>{
+        setUpateIndex(index);
+        setTaskId(flatListItems[index].task_id);
+        setTaskName(flatListItems[index].task_name);
+        setTaskPrice(flatListItems[index].task_price);
+        setTaskValue(flatListItems[index].task_value);
       }
 
       const onPress = (item) => {
-        selectItemToUpdate(item);
-        console.log("ID: "+ idToUpdate);
+        setTaskToUpdate(item.index);
         updateTaskInDb(idToUpdate);
       }
 
