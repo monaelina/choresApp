@@ -13,6 +13,7 @@ import { openDatabase } from 'react-native-sqlite-storage';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
 import TaskList from '../components/TaskList/';
+import { DeleteTask } from '../database/db';
 
 var db = openDatabase({ name: 'TaskDatabase.db' });
 
@@ -20,32 +21,32 @@ const Adult1 = ({navigation})=>{
     let [flatListItems, setFlatListItems] = useState([]);
     let [inputTaskId, setInputTaskId] = useState('');
 
-    let DeleteTask = () => {
-      db.transaction((tx) => {
-        tx.executeSql(
-          'DELETE FROM  table_tasks where task_id=?',
-          [inputTaskId],
-          (tx, results) => {
-            console.log('Results', results.rowsAffected);
-            if (results.rowsAffected > 0) {
-              Alert.alert(
-                'Success',
-                'Task deleted successfully',
-                [
-                  {
-                    text: 'Ok',
-                    onPress: () => navigation.navigate('Adult1'),
-                  },
-                ],
-                { cancelable: false }
-              );
-            } else {
-              alert('Please insert a valid Task Id');
-            }
-          }
-        );
-      });
-    };
+    // let DeleteTask = () => {
+    //   db.transaction((tx) => {
+    //     tx.executeSql(
+    //       'DELETE FROM  table_tasks where task_id=?',
+    //       [inputTaskId],
+    //       (tx, results) => {
+    //         console.log('Results', results.rowsAffected);
+    //         if (results.rowsAffected > 0) {
+    //           Alert.alert(
+    //             'Success',
+    //             'Task deleted successfully',
+    //             [
+    //               {
+    //                 text: 'Ok',
+    //                 onPress: () => navigation.navigate('Adult1'),
+    //               },
+    //             ],
+    //             { cancelable: false }
+    //           );
+    //         } else {
+    //           alert('Please insert a valid Task Id');
+    //         }
+    //       }
+    //     );
+    //   });
+    // };
 
     useEffect(() => {
         db.transaction((tx) => {
@@ -82,13 +83,26 @@ const Adult1 = ({navigation})=>{
       const changeValue = () => {
 
       }
+
+      async function deleteTaskFromDb(task_id){
+        try{
+        const dbResult = DeleteTask(task_id);
+        }
+        catch(err){
+          console.log(err);
+        }
+        finally{
+          //No need to do anything
+        }
+      }
      
       let listItemView = (item) => {
         return (
         <ScrollView style={styles.scrollviewstyle}>
           <View
-            key={item.user_id}
+            key={item.task_id}
             style={{ backgroundColor: 'white', padding: 30 }}>
+            <TouchableOpacity onLongPress={()=> deleteTaskFromDb(item.task_id)}>
           <TouchableOpacity>
               {item.task_value == 0 ? <Icon name="star" size={50} color="silver" />:null}
               {item.task_value == 1 ? <Icon name="star" size={50} color="gold" />:null}
@@ -100,10 +114,13 @@ const Adult1 = ({navigation})=>{
             {item.task_value == 1 ? <Button title='Accept' style={styles.acceptButton}/>:null}
             {item.task_value == 2 ? <Button title='Accepted' style={styles.acceptedButton}/>:null}
           </TouchableOpacity>
+          </TouchableOpacity>
           </View>
          </ScrollView>
         );
       };
+
+
 
     return (
       <SafeAreaView style={{flex:1}}>
@@ -111,25 +128,28 @@ const Adult1 = ({navigation})=>{
             <Button 
             title='Add task'
             onPress={() => navigation.navigate('Adult2')}/>
-            <TextInput
+            {/* <TextInput
             placeholder="Enter Task Id"
             onChangeText={
               (inputTaskId) => setInputTaskId(inputTaskId)
             }
             style={{ padding: 10 }}
-          />
-          <Button title="Delete Task" onPress={DeleteTask} />
+          /> */}
+          {/* <Button title="Delete Task" onPress={DeleteTask} /> */}
             <Text style={styles.title}>Tasklist</Text>
             <FlatList
               data={flatListItems}
               ItemSeparatorComponent={listViewItemSeparator}
               keyExtractor={(item, index) => index.toString()}
-              renderItem={({ item }) => listItemView(item)} />
-          <TaskList/>
+              renderItem={({ item }) => 
+              listItemView(item)} 
+              /> 
+           <TaskList/>
         </View>
       </SafeAreaView>
     );
 }
+
 
 const styles=StyleSheet.create({
     screen:{

@@ -1,10 +1,13 @@
 import React, { useState, useEffect} from 'react';
+import {render} from 'react-dom';
 import {Button, StyleSheet, Text, TextInput, View  } from 'react-native';
 import { openDatabase } from 'react-native-sqlite-storage';
 
 import { updateBalance } from '../database/db';
 
 var db = openDatabase({ name: 'TaskDatabase.db' });
+
+
 
 
 const Child1 = ({navigation})=>{
@@ -27,7 +30,15 @@ const Child1 = ({navigation})=>{
         });
     }, []);
 
-    async function readBalance(){
+    // render() {
+    //   const total = (myBalance.data.reduce((total, currentItem) => total = total +
+    //   currentItem.task_price , 0));
+
+    //     return (
+    //       {total});
+    //     }
+
+    async function readBalance() {
         console.log("updateBalance");
         try{
           const dbResult = await updateBalance();
@@ -59,7 +70,7 @@ const Child1 = ({navigation})=>{
                     onPress={()=>navigation.navigate("Child2")}/>
         </View>
 
-    );
+    );  
 }
 
 const styles=StyleSheet.create({

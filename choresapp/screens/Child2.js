@@ -4,18 +4,18 @@ import { openDatabase } from 'react-native-sqlite-storage';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
 import TaskList from '../components/TaskList/';
-import { updateTaskValue, fetchAllTask } from '../database/db';
+import { updateTaskValue, fetchAllTask, updateTask } from '../database/db';
 
 var db = openDatabase({ name: 'TaskDatabase.db' });
 
 const Child2 = ({navigation})=>{
     let [flatListItems, setFlatListItems] = useState([]);
-    const [updateIndex, setUpateIndex] = useState(-1);
+    const [updateIndex, setUpdateIndex] = useState(-1);
 
-    const [taskId, setTaskId] = useState("");
+    const [task_id, setTaskId] = useState("");
     const [taskName, setTaskName] = useState("");
     const [taskPrice, setTaskPrice] = useState("");
-    const [taskValue, setTaskValue] = useState("");
+    const [task_value, setTaskValue] = useState("");
 
 
     useEffect(() => {
@@ -45,17 +45,30 @@ const Child2 = ({navigation})=>{
       );
     };
 
+    async function updateValueInDb(task_id){
+      try{
+        const dbResult = updateTask(task_id);
+      }
+      catch(err){
+        console.log(err);
+      }
+      finally{
+        setTaskValue(2);
+      }
+    }
+
      
       let listItemView = (item) => {
         return (
           <View
             key={item.task_id}
             style={styles.listItemStyle}>
-            <TouchableOpacity onPress={()=>{onPress(item.task_id)}}>
+          <TouchableOpacity onLongPress={()=> updateValueInDb()}></TouchableOpacity>
+            <TouchableOpacity >
                {item.task_value == 0 ? <Icon name="star" size={50} color="silver" />:null}
                {item.task_value == 1 ? <Icon name="star" size={50} color="gold" />:null}
                {item.task_value == 2 ? <Icon name="star" size={50} color="green" />:null}
-              <Text> {item.task_id}: {item.task_name}   {item.task_price}€ {item.task_value}</Text> 
+               <Text>{item.task_name}   {item.task_price}€ {item.task_value}</Text> 
             </TouchableOpacity> 
             
            
@@ -63,20 +76,20 @@ const Child2 = ({navigation})=>{
         );
       };
 //3, "hoida naapurin lapset", 20, 2
-      async function updateTaskInDb(){
-        console.log("updateTaskInDb");
-        try{
-          const dbResult = await updateTaskValue(flatListItems[updateIndex].taskId, taskName, taskPrice, 1);
-          console.log("plääh");
-          //readAllTask();
-        }
-        catch(err){
-          console.log(err);
-        }
-        finally{
-          //No need to do anything
-        }
-      }
+      // async function updateTaskInDb(){
+      //   console.log("updateTaskInDb");
+      //   try{
+      //     const dbResult = await updateTaskValue(flatListItems[updateIndex].taskId, taskName, taskPrice, 1);
+      //     console.log("plääh");
+      //     //readAllTask();
+      //   }
+      //   catch(err){
+      //     console.log(err);
+      //   }
+      //   finally{
+      //     //No need to do anything
+      //   }
+      // }
 
       // async function readAllTask(){
       //   try{
@@ -93,18 +106,18 @@ const Child2 = ({navigation})=>{
       //   }
       // }
 
-      const setTaskToUpdate = (index) =>{
-        setUpateIndex(index);
-        setTaskId(flatListItems[index].task_id);
-        setTaskName(flatListItems[index].task_name);
-        setTaskPrice(flatListItems[index].task_price);
-        setTaskValue(flatListItems[index].task_value);
-      }
+      // const setTaskToUpdate = (index) =>{
+      //   setUpdateIndex(index);
+      //   setTaskId(flatListItems[index].task_id);
+      //   setTaskName(flatListItems[index].task_name);
+      //   setTaskPrice(flatListItems[index].task_price);
+      //   setTaskValue(flatListItems[index].task_value);
+      // }
 
-      const onPress = (item) => {
-        setTaskToUpdate(item.index);
-        updateTaskInDb(idToUpdate);
-      }
+      // const onPress = (item) => {
+      //   setTaskToUpdate(item.index);
+      //   updateTaskInDb(idToUpdate);
+      // }
 
     // let updateValue = (taskId) => {
     //   setTaskValue(taskValue);
@@ -162,6 +175,8 @@ const Child2 = ({navigation})=>{
     //   searchTask();
     //   //updateTask();
     //   }
+
+
         
     return (
       <SafeAreaView style={{flex:1}}>
@@ -172,7 +187,7 @@ const Child2 = ({navigation})=>{
               ItemSeparatorComponent={listViewItemSeparator}
               keyExtractor={(item, index) => index.toString()}
               renderItem={({ item }) => listItemView(item)} />
-              <Button title="UPDATE" onPress={updateTaskInDb}>UPDATE</Button>
+              {/* <Button title="UPDATE" onPress={updateTaskInDb}>UPDATE</Button> */}
         </View>
         </SafeAreaView>
 
