@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import {FlatList, StyleSheet, Text, TouchableOpacity, View, Button} from 'react-native';
+import {FlatList, SafeAreaView, StyleSheet, Text, TouchableOpacity, View, Button, ScrollView} from 'react-native';
 import { openDatabase } from 'react-native-sqlite-storage';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
@@ -51,11 +51,7 @@ const Child2 = ({navigation})=>{
           <View
             key={item.task_id}
             style={styles.listItemStyle}>
-<<<<<<< Updated upstream
             <TouchableOpacity onPress={()=>{onPress(item.task_id)}}>
-=======
-            <TouchableOpacity onPress={()=>{onPress}}>
->>>>>>> Stashed changes
                {item.task_value == 0 ? <Icon name="star" size={50} color="silver" />:null}
                {item.task_value == 1 ? <Icon name="star" size={50} color="gold" />:null}
                {item.task_value == 2 ? <Icon name="star" size={50} color="green" />:null}
@@ -168,6 +164,7 @@ const Child2 = ({navigation})=>{
     //   }
         
     return (
+      <SafeAreaView style={{flex:1}}>
         <View style={styles.screen}>  
             <Text style={styles.title}>Choose task you have done</Text>
             <FlatList
@@ -177,6 +174,7 @@ const Child2 = ({navigation})=>{
               renderItem={({ item }) => listItemView(item)} />
               <Button title="UPDATE" onPress={updateTaskInDb}>UPDATE</Button>
         </View>
+        </SafeAreaView>
 
     );
 }

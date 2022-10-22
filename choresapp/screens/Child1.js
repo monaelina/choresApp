@@ -8,31 +8,31 @@ var db = openDatabase({ name: 'TaskDatabase.db' });
 
 
 const Child1 = ({navigation})=>{
-    const [myBalance, setmyBalance]=useState('');
+    const [myBalance, setmyBalance]=useState([]);
 
-    // useEffect(() => {
-    //     db.transaction((tx) => {
-    //         console.log("ollaan summan luvussa");
-    //         tx.executeSql(
-    //             'SELECT SUM(task_price) FROM table_tasks WHERE task_value=2',
-    //             [],
-    //             (tx, results) => {
-    //                 var temp = [];
-    //                 for (let i = 0; i < results.rows.length; ++i)
-    //                 temp.push(results.rows.item(i));
-    //                 setmyBalance(temp);
-    //                 console.log("summa luettu"+{temp});
-    //             }
-    //         );
-    //     });
-    // }, []);
+    useEffect(() => {
+        db.transaction((tx) => {
+            console.log("ollaan summan luvussa");
+            tx.executeSql(
+                'SELECT SUM(task_price) FROM table_tasks WHERE task_value=2',
+                [],
+                (tx, results) => {
+                    var temp = [];
+                    for (let i = 0; i < results.rows.length; ++i)
+                    temp.push(results.rows.item(i));
+                    setmyBalance(""+temp);
+                    console.log("summa luettu"+{temp});
+                }
+            );
+        });
+    }, []);
 
     async function readBalance(){
         console.log("updateBalance");
         try{
           const dbResult = await updateBalance();
-          console.log("balance luettu"+ dbResult);
-          setmyBalance(JSON.stringify(dbResult));
+          console.log("balance luettu "+ dbResult);
+          setmyBalance(""+dbResult);
           console.log(myBalance);
         }
         catch(err){
@@ -50,12 +50,11 @@ const Child1 = ({navigation})=>{
     return (
         <View style={styles.screen}>
             <Text style={styles.title}>My Account</Text>
-            <Text>My Balance</Text>
+            <Text style={styles.balance}>My Balance</Text>
             {/* {myBalance.map((item,index)=>  */}
-        
             <TextInput editable={false} style={styles.inputStyle}>{myBalance}€</TextInput>
             {/* )} */}
-            <Button title='jotain' onPress={readBalance}/>
+            <Button title='jotain'onPress={readBalance}/>
             <Button title= 'Check tasks'
                     onPress={()=>navigation.navigate("Child2")}/>
         </View>
@@ -64,10 +63,16 @@ const Child1 = ({navigation})=>{
 }
 
 const styles=StyleSheet.create({
+    inputStyle:{
+      fontSize:20
+    },
+    balance:{
+      fontSize:25,
+      justifyContent:'center',
+    },
     screen:{
         alignItems: 'center',
     },
-    
     title:{
         fontSize:30,
         justifyContent:'center',
