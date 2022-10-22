@@ -10,7 +10,7 @@ var db = openDatabase({ name: 'TaskDatabase.db' });
 
 const Child2 = ({navigation})=>{
     let [flatListItems, setFlatListItems] = useState([]);
-    const [updateIndex, setUpateIndex] = useState(-1);
+    const [updateIndex, setUpdateIndex] = useState(-1);
 
     const [taskId, setTaskId] = useState("");
     const [taskName, setTaskName] = useState("");
@@ -51,7 +51,7 @@ const Child2 = ({navigation})=>{
           <View
             key={item.task_id}
             style={styles.listItemStyle}>
-            <TouchableOpacity onPress={()=>{onPress(item.task_id)}}>
+            <TouchableOpacity onPress={onPress}>
                {item.task_value == 0 ? <Icon name="star" size={50} color="silver" />:null}
                {item.task_value == 1 ? <Icon name="star" size={50} color="gold" />:null}
                {item.task_value == 2 ? <Icon name="star" size={50} color="green" />:null}
@@ -66,15 +66,15 @@ const Child2 = ({navigation})=>{
       async function updateTaskInDb(){
         console.log("updateTaskInDb");
         try{
-          const dbResult = await updateTaskValue(flatListItems[updateIndex].taskId, taskName, taskPrice, 1);
+          const dbResult = await updateTaskValue(taskId, taskName, taskPrice, 1);
           console.log("plääh");
           //readAllTask();
         }
         catch(err){
-          console.log(err);
+          console.log("täältä tulee error"+err);
         }
         finally{
-          //No need to do anything
+          setUpdateIndex(-1);
         }
       }
 
@@ -93,17 +93,17 @@ const Child2 = ({navigation})=>{
       //   }
       // }
 
-      const setTaskToUpdate = (index) =>{
-        setUpateIndex(index);
-        setTaskId(flatListItems[index].task_id);
+      async function setTaskToUpdate (index) {
+        setUpdateIndex(index);
+        setTaskId(flatListItems[index].item.task_id);
         setTaskName(flatListItems[index].task_name);
         setTaskPrice(flatListItems[index].task_price);
         setTaskValue(flatListItems[index].task_value);
       }
 
-      const onPress = (item) => {
+      const onPress = (item) =>{
         setTaskToUpdate(item.index);
-        updateTaskInDb(idToUpdate);
+        updateTaskInDb(updateIndex);
       }
 
     // let updateValue = (taskId) => {
