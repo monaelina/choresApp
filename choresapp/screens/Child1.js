@@ -4,6 +4,7 @@ import {Button, StyleSheet, Text, TextInput, View  } from 'react-native';
 import { openDatabase } from 'react-native-sqlite-storage';
 
 import { updateBalance } from '../database/db';
+import Bottom from '../components/Bottom';
 
 var db = openDatabase({ name: 'TaskDatabase.db' });
 
@@ -53,10 +54,6 @@ const Child1 = ({navigation})=>{
           //No need to do anything
         }
       }
-    
-    const printBalance= () =>{
-        readBalance();
-    }
 
     return (
         <View style={styles.screen}>
@@ -65,11 +62,12 @@ const Child1 = ({navigation})=>{
             {/* {myBalance.map((item,index)=>  */}
             <TextInput editable={false} style={styles.inputStyle}>{myBalance}€</TextInput>
             {/* )} */}
-            <Button title='jotain'onPress={readBalance}/>
+            <Button title='Update Balance'onPress={readBalance}/>
+            <Text> </Text>
             <Button title= 'Check tasks'
                     onPress={()=>navigation.navigate("Child2")}/>
+        <Bottom/>
         </View>
-
     );  
 }
 

@@ -1,87 +1,38 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState} from 'react';
 import {
   FlatList, 
   View, 
   Text, 
   StyleSheet, 
-  TextInput,
   Button, 
   TouchableOpacity,
   SafeAreaView,
-  ScrollView} from 'react-native';
-import { openDatabase } from 'react-native-sqlite-storage';
+  ScrollView,
+  TextInput,
+  } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
-import TaskList from '../components/TaskList/';
-import { DeleteTask } from '../database/db';
-
-var db = openDatabase({ name: 'TaskDatabase.db' });
+import { DeleteTask, fetchAllTask, updateTaskValue } from '../database/db';
+import Bottom from '../components/Bottom';
 
 const Adult1 = ({navigation})=>{
     let [flatListItems, setFlatListItems] = useState([]);
-    let [inputTaskId, setInputTaskId] = useState('');
 
-    // let DeleteTask = () => {
-    //   db.transaction((tx) => {
-    //     tx.executeSql(
-    //       'DELETE FROM  table_tasks where task_id=?',
-    //       [inputTaskId],
-    //       (tx, results) => {
-    //         console.log('Results', results.rowsAffected);
-    //         if (results.rowsAffected > 0) {
-    //           Alert.alert(
-    //             'Success',
-    //             'Task deleted successfully',
-    //             [
-    //               {
-    //                 text: 'Ok',
-    //                 onPress: () => navigation.navigate('Adult1'),
-    //               },
-    //             ],
-    //             { cancelable: false }
-    //           );
-    //         } else {
-    //           alert('Please insert a valid Task Id');
-    //         }
-    //       }
-    //     );
-    //   });
-    // };
+    
+    const [updateIndex, setUpdateIndex] = useState(-1);
+    const [taskId, setTaskId] = useState("");
 
-    useEffect(() => {
-        db.transaction((tx) => {
-            tx.executeSql(
-                'SELECT * FROM table_tasks',
-                [],
-                (tx, results) => {
-                    var temp = [];
-                    for (let i = 0; i < results.rows.length; ++i)
-                    temp.push(results.rows.item(i));
-                    setFlatListItems(temp);
-                }
-            );
-        });
-    }, []);
-
-    let listViewItemSeparator = () => {
-        return (
-          <View
-            style={{
-              height: 0.2,
-              width: '100%',
-              backgroundColor: '#808080'
-            }}
-          />
-        );
-      };
-
-   //   const updateBalance = () => {
-   //       updatedBalance(taskPrice + myBalance);
-   //       console.log('balancen päivitys')
-   //   };
-
-      const changeValue = () => {
-
+       async function readAllTask(){
+        try{
+          const dbResult = await fetchAllTask();
+          console.log(dbResult);
+          setFlatListItems(dbResult);
+        }
+        catch(err){
+          console.log("Error: "+err);
+        }
+        finally{
+        }
       }
 
       async function deleteTaskFromDb(task_id){
@@ -95,57 +46,85 @@ const Adult1 = ({navigation})=>{
           //No need to do anything
         }
       }
+
+      async function updateTaskInDb(){
+        console.log("updateTaskInDb");
+        try{
+          const dbResult = await updateTaskValue(taskId, 2);
+          console.log("plääh");
+          readAllTask();
+        }
+        catch(err){
+          console.log('täältä tulee error '+err);
+        }
+        finally{
+          setUpdateIndex(-1);
+        }
+      }
      
       let listItemView = (item) => {
         return (
+        <SafeAreaView>
         <ScrollView style={styles.scrollviewstyle}>
           <View
             key={item.task_id}
-            style={{ backgroundColor: 'white', padding: 30 }}>
-            <TouchableOpacity onLongPress={()=> deleteTaskFromDb(item.task_id)}>
+            style={styles.listItemStyle}>
+            <TouchableOpacity onLongPress={()=>{ deleteTaskFromDb(item.task_id)}} >
           <TouchableOpacity>
               {item.task_value == 0 ? <Icon name="star" size={50} color="silver" />:null}
               {item.task_value == 1 ? <Icon name="star" size={50} color="gold" />:null}
               {item.task_value == 2 ? <Icon name="star" size={50} color="green" />:null}
           </TouchableOpacity>
-            <Text>{item.task_name}   {item.task_price}€</Text>
-          <TouchableOpacity>
-            {item.task_value == 0 ? <Button title='undone' style={styles.undoneButton}/>:null}
-            {item.task_value == 1 ? <Button title='Accept' style={styles.acceptButton}/>:null}
-            {item.task_value == 2 ? <Button title='Accepted' style={styles.acceptedButton}/>:null}
-          </TouchableOpacity>
+            <Text style={styles.listTextStyle}>{item.task_id}. {item.task_name}   {item.task_price}€</Text>
+          {/* <TouchableOpacity>
+            {item.task_value == 0 ? <Button title='undone' color='grey'/>:null}
+            {item.task_value == 1 ? <Button title='Accept' color='purple'/>:null}
+            {item.task_value == 2 ? <Button title='Accepted' color='green'/>:null}
+          </TouchableOpacity> */}
           </TouchableOpacity>
           </View>
          </ScrollView>
+         </SafeAreaView>
         );
       };
 
 
 
     return (
-      <SafeAreaView style={{flex:1}}>
+      <SafeAreaView style={styles.safeAreaStyle} >
         <View style={styles.screen}>  
+        <View>
+        <Button 
+        title = 'Show tasklist'
+        onPress={() => readAllTask()}
+        />
+        </View>
+        <Text> </Text>
+        <View>
             <Button 
             title='Add task'
             onPress={() => navigation.navigate('Adult2')}/>
-            {/* <TextInput
-            placeholder="Enter Task Id"
-            onChangeText={
-              (inputTaskId) => setInputTaskId(inputTaskId)
-            }
-            style={{ padding: 10 }}
-          /> */}
-          {/* <Button title="Delete Task" onPress={DeleteTask} /> */}
-            <Text style={styles.title}>Tasklist</Text>
-            <FlatList
+            </View>
+            <TextInput
+                  placeholder="Enter task you want to pay"
+                  onChangeText={
+                    (taskId) => setTaskId(taskId)
+                  }
+                  maxLength={1}
+                  keyboardType="numeric"
+                  style={{ padding: 10 }}
+                />
+              <Button title="Confirm" onPress={updateTaskInDb} />
+              <Text style={styles.title}>Tasklist</Text>
+            <FlatList 
               data={flatListItems}
-              ItemSeparatorComponent={listViewItemSeparator}
               keyExtractor={(item, index) => index.toString()}
               renderItem={({ item }) => 
               listItemView(item)} 
               /> 
-           <TaskList/>
+              
         </View>
+      <Bottom/>
       </SafeAreaView>
     );
 }
@@ -153,31 +132,39 @@ const Adult1 = ({navigation})=>{
 
 const styles=StyleSheet.create({
     screen:{
-        padding: 20,
-        alignItems: 'center',
+        padding: 10,
+        marginBottom: '100%',
+    },
+
+    listTextStyle: {
+      fontSize: 27,
     },
 
     scrollviewstyle: {
-      padding: 5,
+      flex:1,
+      paddingVertical: 3,
+      width:'100%',
+      height: '150%',
+    },
+
+    safeAreaStyle: {
+      padding: 10,
+
     },
     
     title:{
         padding: 20,
         fontSize:30,
         justifyContent:'center',
+        marginLeft:100,
     },
 
-    undoneButton: {
-      backgroundColor: 'grey',
-    },
-
-    acceptButton: {
-      backgroundColor: 'purple',
-    },
-
-    acceptedButton: {
-      backgroundColor: 'green',
-    },
+    listItemStyle:{
+      padding:5,
+      width:"100%",
+      flexDirection:"row",
+      position: 'relative',
+    }
 });
 
 export default Adult1;

@@ -1,8 +1,10 @@
 import React, {useState} from 'react';
 import {View, Text, TextInput, StyleSheet, Button, ScrollView, Alert, SafeAreaView, KeyboardAvoidingView} from 'react-native';
 import { openDatabase } from 'react-native-sqlite-storage';
+import Bottom from '../components/Bottom';
 
 var db = openDatabase({ name: 'TaskDatabase.db' });
+
 
 const Adult2 = ({ navigation })=>{
     let [taskName, setTaskName] = useState('');
@@ -38,7 +40,7 @@ const Adult2 = ({ navigation })=>{
                 [
                   {
                     text: 'Ok',
-                    onPress: () => navigation.navigate('Adult1'),
+                    onPress: () => {navigation.navigate('Adult1')},
                   },
                 ],
                 { cancelable: false }
@@ -72,16 +74,8 @@ const Adult2 = ({ navigation })=>{
                   keyboardType="numeric"
                   style={{ padding: 10 }}
                 />
-             {/*  <TextInput
-                  placeholder="Enter Value"
-                  onChangeText={
-                    (taskValue) => setTaskValue(taskValue)
-                  }
-                  maxLength={3}
-                  keyboardType="numeric"
-                  style={{ padding: 10 }}
-                />   */}
                 <Button title="Submit" onPress={register_task} />
+                
               </KeyboardAvoidingView>
             </ScrollView>
           </View>
@@ -100,6 +94,7 @@ const Adult2 = ({ navigation })=>{
           }}>
         </Text>
       </View>
+      <Bottom/>
     </SafeAreaView>
   );
 };
