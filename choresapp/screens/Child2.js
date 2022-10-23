@@ -65,18 +65,20 @@ const Child2 = ({navigation})=>{
         }
       }
 
-      async function setTaskToUpdate (index) {
-        setUpdateIndex(index);
-        setTaskId(flatListItems[index].item.task_id);
-        setTaskName(flatListItems[index].task_name);
-        setTaskPrice(flatListItems[index].task_price);
-        setTaskValue(flatListItems[index].task_value);
-      }
+      
 
-      const onPress = (item) => {
-        setTaskToUpdate(item.index);
-        updateTaskInDb(updateIndex);
-      }
+      // async function setTaskToUpdate (index) {
+      //   setUpdateIndex(index);
+      //   setTaskId(flatListItems[index].item.task_id);
+      //   setTaskName(flatListItems[index].task_name);
+      //   setTaskPrice(flatListItems[index].task_price);
+      //   setTaskValue(flatListItems[index].task_value);
+      // }
+
+      // const onPress = (item) => {
+      //   setTaskToUpdate(item.index);
+      //   updateTaskInDb(updateIndex);
+      // }
 
     return (
       <SafeAreaView style={styles.safeAreaStyle}>

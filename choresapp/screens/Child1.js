@@ -3,7 +3,7 @@ import {render} from 'react-dom';
 import {Button, StyleSheet, Text, TextInput, View  } from 'react-native';
 import { openDatabase } from 'react-native-sqlite-storage';
 
-import { updateBalance } from '../database/db';
+import { updateBalance, readPrice } from '../database/db';
 import Bottom from '../components/Bottom';
 
 var db = openDatabase({ name: 'TaskDatabase.db' });
@@ -12,40 +12,16 @@ var db = openDatabase({ name: 'TaskDatabase.db' });
 
 
 const Child1 = ({navigation})=>{
-    const [myBalance, setmyBalance]=useState([]);
+    const [myBalance, setmyBalance]=useState();
+    const [balance, setBalance]=useState([]);
 
-    useEffect(() => {
-        db.transaction((tx) => {
-            console.log("ollaan summan luvussa");
-            tx.executeSql(
-                'SELECT SUM(task_price) FROM table_tasks WHERE task_value=2',
-                [],
-                (tx, results) => {
-                    var temp = [];
-                    for (let i = 0; i < results.rows.length; ++i)
-                    temp.push(results.rows.item(i));
-                    setmyBalance(""+temp);
-                    console.log("summa luettu"+{temp});
-                }
-            );
-        });
-    }, []);
-
-    // render() {
-    //   const total = (myBalance.data.reduce((total, currentItem) => total = total +
-    //   currentItem.task_price , 0));
-
-    //     return (
-    //       {total});
-    //     }
-
+    const sum= balance.reduce((a,v)=> a=a+v.task_price,0);
+    
     async function readBalance() {
-        console.log("updateBalance");
         try{
-          const dbResult = await updateBalance();
-          console.log("balance luettu "+ dbResult);
-          setmyBalance(""+dbResult);
-          console.log(myBalance);
+          const dbResult = await readPrice();
+          setBalance(dbResult);
+          console.log(balance);
         }
         catch(err){
           console.log(err);
@@ -55,6 +31,12 @@ const Child1 = ({navigation})=>{
         }
       }
 
+    onPress=()=>{
+      readBalance();
+      console.log("Summa: "+sum);
+      setmyBalance(sum);
+    }
+
     return (
         <View style={styles.screen}>
             <Text style={styles.title}>My Account</Text>
@@ -62,7 +44,7 @@ const Child1 = ({navigation})=>{
             {/* {myBalance.map((item,index)=>  */}
             <TextInput editable={false} style={styles.inputStyle}>{myBalance}€</TextInput>
             {/* )} */}
-            <Button title='Update Balance'onPress={readBalance}/>
+            <Button title='Update Balance'onPress={onPress}/>
             <Text> </Text>
             <Button title= 'Check tasks'
                     onPress={()=>navigation.navigate("Child2")}/>
