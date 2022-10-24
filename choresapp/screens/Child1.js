@@ -9,8 +9,6 @@ import Bottom from '../components/Bottom';
 var db = openDatabase({ name: 'TaskDatabase.db' });
 
 
-
-
 const Child1 = ({navigation})=>{
     const [myBalance, setmyBalance]=useState();
     const [balance, setBalance]=useState([]);
@@ -20,7 +18,7 @@ const Child1 = ({navigation})=>{
     async function readBalance() {
         try{
           const dbResult = await readPrice();
-          setBalance(dbResult);
+          await setBalance(dbResult);
           console.log(balance);
         }
         catch(err){
@@ -44,7 +42,7 @@ const Child1 = ({navigation})=>{
             {/* {myBalance.map((item,index)=>  */}
             <TextInput editable={false} style={styles.inputStyle}>{myBalance}€</TextInput>
             {/* )} */}
-            <Button title='Update Balance'onPress={onPress}/>
+            <Button title='Update Balance' onPress={onPress}/>
             <Text> </Text>
             <Button title= 'Check tasks'
                     onPress={()=>navigation.navigate("Child2")}/>

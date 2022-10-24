@@ -3,7 +3,7 @@ import {FlatList, SafeAreaView, StyleSheet, Text, TouchableOpacity, View, Button
 import { openDatabase } from 'react-native-sqlite-storage';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
-import { updateTaskValue } from '../database/db';
+import { updateTaskValue, fetchAllTask } from '../database/db';
 import Bottom from '../components/Bottom';
 
 var db = openDatabase({ name: 'TaskDatabase.db' });
@@ -16,6 +16,19 @@ const Child2 = ({navigation})=>{
     const [taskName, setTaskName] = useState("");
     const [taskPrice, setTaskPrice] = useState("");
     const [taskValue, setTaskValue] = useState("");
+
+    async function readAllTask(){
+      try{
+        const dbResult = await fetchAllTask();
+        console.log(dbResult);
+        setFlatListItems(dbResult);
+      }
+      catch(err){
+        console.log("Error: "+err);
+      }
+      finally{
+      }
+    }
 
 
     useEffect(() => {
@@ -33,17 +46,17 @@ const Child2 = ({navigation})=>{
       });
   }, []);
      
-      let listItemView = (item) => {
+      let listItemView = (item, index) => {
         return (
           <ScrollView style={styles.scrollviewstyle}>
           <View
-            key={item.task_id}
+            key={item.item.task_id}
             style={styles.listItemStyle}>
           <TouchableOpacity>
-               {item.task_value == 0 ? <Icon name="star" size={40} color="silver" />:null}
-               {item.task_value == 1 ? <Icon name="star" size={40} color="gold" />:null}
-               {item.task_value == 2 ? <Icon name="star" size={40} color="green" />:null}
-               <Text style={styles.listTextStyle}>{item.task_id}. {item.task_name}   {item.task_price}€</Text>  
+               {item.item.task_value == 0 ? <Icon name="star" size={40} color="silver" />:null}
+               {item.item.task_value == 1 ? <Icon name="star" size={40} color="gold" />:null}
+               {item.item.task_value == 2 ? <Icon name="star" size={40} color="green" />:null}
+               <Text style={styles.listTextStyle}>{item.item.task_id}. {item.item.task_name}   {item.item.task_price}€</Text>  
             </TouchableOpacity>
           </View>
           </ScrollView>
@@ -97,7 +110,7 @@ const Child2 = ({navigation})=>{
             <FlatList
               data={flatListItems}
               keyExtractor={(item, index) => index.toString()}
-              renderItem={({ item }) => listItemView(item)} />
+              renderItem={( item, index ) => listItemView(item, index)} />
         </View>
         <Bottom/>
         </SafeAreaView>

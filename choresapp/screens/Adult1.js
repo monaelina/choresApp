@@ -38,6 +38,7 @@ const Adult1 = ({navigation})=>{
       async function deleteTaskFromDb(task_id){
         try{
         const dbResult = DeleteTask(task_id);
+        readAllTask();
         }
         catch(err){
           console.log(err);
@@ -51,7 +52,6 @@ const Adult1 = ({navigation})=>{
         console.log("updateTaskInDb");
         try{
           const dbResult = await updateTaskValue(taskId, 2);
-          console.log("plääh");
           readAllTask();
         }
         catch(err){
@@ -156,12 +156,12 @@ const styles=StyleSheet.create({
         padding: 20,
         fontSize:30,
         justifyContent:'center',
-        marginLeft:100,
+        
     },
 
     listItemStyle:{
       padding:5,
-      width:"100%",
+      //width:"100%",
       flexDirection:"row",
       position: 'relative',
     }
